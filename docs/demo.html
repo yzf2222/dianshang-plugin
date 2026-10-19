@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>轻风 · 真皮通勤单肩包 - 商品详情</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #1f2329;
+  }
+  /* 顶部 */
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 14px 0;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .topbar .wrap { display: flex; align-items: center; gap: 24px; }
+  .logo { font-size: 20px; font-weight: 800; color: #ff5000; letter-spacing: 1px; }
+  .search {
+    flex: 1; max-width: 560px; display: flex;
+    border: 2px solid #ff5000; border-radius: 4px; overflow: hidden;
+  }
+  .search input { flex: 1; border: 0; outline: 0; padding: 9px 14px; font-size: 14px; }
+  .search button {
+    border: 0; background: #ff5000; color: #fff; padding: 0 26px;
+    font-size: 15px; cursor: pointer;
+  }
+  .topnav { margin-left: auto; font-size: 13px; color: #666; display: flex; gap: 18px; }
+
+  /* 商品主区 */
+  .main {
+    background: #fff; margin-top: 14px; padding: 28px;
+    display: grid; grid-template-columns: 460px 1fr; gap: 40px;
+  }
+  .gallery-main {
+    width: 460px; height: 460px; border: 1px solid #eee; border-radius: 6px;
+    overflow: hidden; background: #fafafa;
+  }
+  .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumbs { display: flex; gap: 10px; margin-top: 12px; }
+  .thumbs img {
+    width: 76px; height: 76px; object-fit: cover; border: 2px solid transparent;
+    border-radius: 4px; cursor: pointer;
+  }
+  .thumbs img.active { border-color: #ff5000; }
+
+  .title { font-size: 22px; line-height: 1.5; font-weight: 600; }
+  .subtitle { color: #888; font-size: 13px; margin-top: 8px; }
+
+  .pricebox {
+    margin-top: 18px; background: linear-gradient(90deg, #fff5f0, #fff);
+    border-radius: 6px; padding: 16px 18px;
+  }
+  .pricebox .label { font-size: 13px; color: #999; }
+  .price { font-size: 34px; color: #ff5000; font-weight: 700; }
+  .price small { font-size: 16px; font-weight: 500; }
+  .pricebox .origin { color: #aaa; text-decoration: line-through; margin-left: 10px; font-size: 14px; }
+
+  .spec { margin-top: 20px; font-size: 14px; color: #444; }
+  .spec .row { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+  .spec .k { color: #999; width: 56px; flex: none; }
+  .chip {
+    border: 1px solid #ddd; border-radius: 4px; padding: 5px 14px;
+    font-size: 13px; cursor: pointer; background: #fff;
+  }
+  .chip.on { border-color: #ff5000; color: #ff5000; background: #fff5f0; }
+
+  .buy { display: flex; gap: 14px; margin-top: 26px; }
+  .btn {
+    padding: 14px 40px; border: 0; border-radius: 4px; font-size: 16px;
+    font-weight: 600; cursor: pointer;
+  }
+  .btn-cart { background: #ffe4d6; color: #ff5000; }
+  .btn-buy { background: #ff5000; color: #fff; }
+
+  .services { margin-top: 22px; display: flex; gap: 18px; font-size: 12px; color: #888; }
+
+  /* 详情 */
+  .detail { background: #fff; margin-top: 14px; padding: 26px 28px 40px; }
+  .detail h2 {
+    font-size: 16px; font-weight: 600; border-left: 4px solid #ff5000;
+    padding-left: 10px; margin-bottom: 20px;
+  }
+  .detail img { width: 100%; display: block; margin-bottom: 12px; border-radius: 4px; }
+  .foot { text-align: center; color: #aaa; font-size: 12px; padding: 30px 0 50px; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .gallery-main { width: 100%; height: auto; aspect-ratio: 1/1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="logo">轻风商城</div>
+    <div class="search">
+      <input value="真皮通勤单肩包" />
+      <button>搜索</button>
+    </div>
+    <div class="topnav">
+      <span>我的订单</span><span>购物车</span><span>收藏</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="main">
+    <div>
+      <div class="gallery-main">
+        <img id="bigImg" src="https://picsum.photos/seed/bag01/800/800" alt="商品主图" />
+      </div>
+      <div class="thumbs" id="thumbs">
+        <img class="active" src="https://picsum.photos/seed/bag01/200/200" data-big="https://picsum.photos/seed/bag01/800/800" alt="图1" />
+        <img src="https://picsum.photos/seed/bag02/200/200" data-big="https://picsum.photos/seed/bag02/800/800" alt="图2" />
+        <img src="https://picsum.photos/seed/bag03/200/200" data-big="https://picsum.photos/seed/bag03/800/800" alt="图3" />
+        <img src="https://picsum.photos/seed/bag04/200/200" data-big="https://picsum.photos/seed/bag04/800/800" alt="图4" />
+        <img src="https://picsum.photos/seed/bag05/200/200" data-big="https://picsum.photos/seed/bag05/800/800" alt="图5" />
+      </div>
+    </div>
+
+    <div>
+      <div class="title">轻风 QF-2081 头层牛皮通勤单肩包 大容量托特包</div>
+      <div class="subtitle">头层牛皮 · 手工缝线 · 可放 14 寸笔记本 · 三色可选</div>
+
+      <div class="pricebox">
+        <div class="label">活动价</div>
+        <div class="price"><small>¥</small>399<span class="origin">¥699</span></div>
+      </div>
+
+      <div class="spec">
+        <div class="row">
+          <div class="k">颜色</div>
+          <div class="chip on">雾霾蓝</div>
+          <div class="chip">焦糖棕</div>
+          <div class="chip">曜石黑</div>
+        </div>
+        <div class="row">
+          <div class="k">尺寸</div>
+          <div class="chip">标准款 32cm</div>
+          <div class="chip on">加大款 38cm</div>
+        </div>
+      </div>
+
+      <div class="buy">
+        <button class="btn btn-cart">加入购物车</button>
+        <button class="btn btn-buy">立即购买</button>
+      </div>
+
+      <div class="services">
+        <span>✓ 7 天无理由</span><span>✓ 顺丰包邮</span><span>✓ 正品保障</span><span>✓ 支持开发票</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <h2>商品详情</h2>
+    <img src="https://picsum.photos/seed/bagdetail1/1200/700" alt="详情图1" />
+    <img src="https://picsum.photos/seed/bagdetail2/1200/700" alt="详情图2" />
+    <img src="https://picsum.photos/seed/bagdetail3/1200/700" alt="详情图3" />
+  </div>
+
+  <div class="foot">本页面为「电商图片提取下载助手」的演示页，图片来自 picsum.photos</div>
+</div>
+
+<script>
+  document.getElementById('thumbs').addEventListener('click', function (e) {
+    var img = e.target.closest('img');
+    if (!img) return;
+    document.querySelectorAll('#thumbs img').forEach(function (i) { i.classList.remove('active'); });
+    img.classList.add('active');
+    document.getElementById('bigImg').src = img.dataset.big;
+  });
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var row = c.parentElement;
+      row.querySelectorAll('.chip').forEach(function (i) { i.classList.remove('on'); });
+      c.classList.add('on');
+    });
+  });
+</script>
+</body>
+</html>

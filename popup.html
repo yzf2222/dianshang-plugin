@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>电商图片提取下载助手</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 320px;
+      padding: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #1a1d29;
+      background: #fff;
+    }
+
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #ff5000, #ff7a1a);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 12px rgba(255, 80, 0, 0.3);
+    }
+
+    .title { font-size: 15px; font-weight: 700; }
+    .subtitle { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+    .status {
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .status.ok { background: #ecfdf5; color: #15803d; }
+    .status.warn { background: #fffbeb; color: #b45309; }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 38px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff5000, #ff7a1a);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(255, 80, 0, 0.28);
+      margin-bottom: 8px;
+    }
+
+    .btn-primary:hover { box-shadow: 0 6px 16px rgba(255, 80, 0, 0.36); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+    .btn-ghost {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-ghost:hover { background: #e5e7eb; }
+
+    .tips {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f1f4;
+      font-size: 11px;
+      line-height: 1.75;
+      color: #9ca3af;
+    }
+
+    .tips b { color: #6b7280; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <div class="mark">IMG</div>
+    <div>
+      <div class="title">电商图片提取下载助手</div>
+      <div class="subtitle">v1.0.0</div>
+    </div>
+  </div>
+
+  <div id="status" class="status">正在检测当前页面…</div>
+
+  <button id="btnExtract" class="btn btn-primary">提取当前页图片</button>
+  <button id="btnGallery" class="btn btn-ghost">打开图片预览页</button>
+
+  <div class="tips">
+    <b>支持站点：</b>淘宝 / 天猫 / 京东 / 拼多多 / 1688<br />
+    <b>使用方式：</b>打开商品详情页 → 点击页面右下角「获取图片」→ 在预览页勾选并下载 PNG
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

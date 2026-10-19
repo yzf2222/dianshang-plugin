@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>电商图片提取下载助手 - 一键批量下载商品图</title>
+<meta name="description" content="支持淘宝、天猫、京东、拼多多的 Chrome 浏览器扩展。一键提取商品详情页全部图片，勾选后批量下载为 PNG。" />
+<style>
+  :root {
+    --brand: #ff5000;
+    --brand-2: #ff8a3d;
+    --brand-soft: #fff4ee;
+    --ink: #14161f;
+    --ink-2: #4b5563;
+    --ink-3: #8b93a3;
+    --line: #e8eaf0;
+    --bg: #ffffff;
+    --bg-2: #fafbfd;
+    --radius: 18px;
+    --shadow-sm: 0 1px 2px rgba(16,24,40,.05);
+    --shadow-md: 0 10px 30px rgba(16,24,40,.08);
+    --shadow-lg: 0 28px 70px rgba(16,24,40,.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ 导航 ============ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid rgba(232,234,240,.8);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 66px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -.2px;
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(255,80,0,.3);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  .nav-links a {
+    transition: color .16s ease;
+  }
+
+  .nav-links a:hover { color: var(--brand); }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(20,22,31,.24);
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative;
+    padding: 88px 0 96px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -280px;
+    right: -180px;
+    width: 720px;
+    height: 720px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,138,61,.14) 0%, rgba(255,138,61,0) 68%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -320px;
+    left: -220px;
+    width: 620px;
+    height: 620px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,80,0,.08) 0%, rgba(255,80,0,0) 70%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: var(--brand-soft);
+    color: #c2410c;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 0 3px rgba(255,80,0,.16);
+  }
+
+  h1 {
+    font-size: 52px;
+    line-height: 1.16;
+    letter-spacing: -1.6px;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+
+  h1 .grad {
+    background: linear-gradient(120deg, var(--brand) 0%, var(--brand-2) 60%, #ffb066 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    max-width: 480px;
+    margin-bottom: 32px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .btn-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    height: 50px;
+    padding: 0 26px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .18s ease;
+  }
+
+  .btn-solid {
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(255,80,0,.28);
+  }
+
+  .btn-solid:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(255,80,0,.34);
+  }
+
+  .btn-line {
+    background: #fff;
+    border-color: var(--line);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-line:hover {
+    border-color: #cfd3dd;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    color: var(--ink);
+  }
+
+  .meta-item span {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  /* ============ Hero 右侧：浏览器模拟 ============ */
+  .mock {
+    position: relative;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .mock-bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 13px 16px;
+    background: #f7f8fb;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot:nth-child(1) { background: #ff5f57; }
+  .dot:nth-child(2) { background: #febc2e; }
+  .dot:nth-child(3) { background: #28c840; }
+
+  .mock-url {
+    flex: 1;
+    margin-left: 10px;
+    height: 24px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid var(--line);
+    font-size: 10px;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .mock-body {
+    position: relative;
+    padding: 18px;
+    background: linear-gradient(180deg, #fdfdfe 0%, #f8f9fc 100%);
+    min-height: 320px;
+  }
+
+  .mock-product {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 14px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  .mock-thumb {
+    width: 96px;
+    height: 96px;
+    border-radius: 9px;
+    background:
+      linear-gradient(135deg, #ffe4d4 0%, #ffd0b5 48%, #ffb98f 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mock-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 22% 26%;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,.55);
+  }
+
+  .mock-lines { padding-top: 6px; }
+  .mock-line {
+    height: 9px;
+    border-radius: 5px;
+    background: #eef0f4;
+    margin-bottom: 8px;
+  }
+  .mock-line.w70 { width: 70%; }
+  .mock-line.w45 { width: 45%; background: #ffe6d9; }
+  .mock-line.w60 { width: 60%; }
+
+  .mock-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
+  }
+
+  .mock-cell {
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f3f5f9, #e9edf4);
+    border: 1px solid #edf0f5;
+  }
+  .mock-cell:nth-child(2) { background: linear-gradient(135deg,#ffe9dd,#ffd8c4); }
+  .mock-cell:nth-child(5) { background: linear-gradient(135deg,#e6f0ff,#d8e6ff); }
+  .mock-cell:nth-child(7) { background: linear-gradient(135deg,#e9f9ef,#d7f2e2); }
+
+  /* 浮动按钮模拟 */
+  .mock-fab {
+    position: absolute;
+    right: 16px;
+    bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 15px 9px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(255,80,0,.34);
+    animation: float 2.8s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .mock-fab-ico {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.24);
+    font-size: 8px;
+    letter-spacing: .3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ============ 区块通用 ============ */
+  section { padding: 96px 0; }
+
+  .sec-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
+
+  .sec-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #f4f6fa;
+    color: var(--ink-2);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .sec-head h2 {
+    font-size: 36px;
+    line-height: 1.28;
+    letter-spacing: -1px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+
+  .sec-head p {
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+
+  /* ============ 功能卡片 ============ */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .feat {
+    padding: 30px 26px;
+    border-radius: var(--radius);
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+    transition: all .2s ease;
+  }
+
+  .feat:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: #dfe3ec;
+  }
+
+  .feat-ico {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: var(--brand-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .feat-ico svg {
+    width: 23px;
+    height: 23px;
+    stroke: var(--brand);
+    stroke-width: 1.8;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feat h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -.2px;
+  }
+
+  .feat p {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+
+  /* ============ 使用步骤 ============ */
+  .steps-sec { background: var(--bg-2); }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    position: relative;
+  }
+
+  .step {
+    position: relative;
+    padding: 30px 26px 32px;
+    border-radius: var(--radius);
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 18px rgba(255,80,0,.24);
+  }
+
+  .step h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+
+  .step code {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: #f4f6fa;
+    border: 1px solid #e9edf4;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 11.5px;
+    color: #b4440c;
+  }
+
+  /* ============ 平台支持 ============ */
+  .platforms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .plat {
+    padding: 14px 30px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-2);
+    box-shadow: var(--shadow-sm);
+    transition: all .18s ease;
+  }
+
+  .plat:hover {
+    color: var(--ink);
+    border-color: #cfd3dd;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ============ 安装区块 ============ */
+  .install-sec {
+    background: linear-gradient(160deg, #14161f 0%, #1d2233 100%);
+    color: #fff;
+  }
+
+  .install-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .install-sec h2 {
+    font-size: 34px;
+    line-height: 1.3;
+    letter-spacing: -.9px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+
+  .install-sec .lead {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(255,255,255,.66);
+    margin-bottom: 26px;
+  }
+
+  .install-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .install-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: rgba(255,255,255,.86);
+    line-height: 1.6;
+  }
+
+  .install-list .num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.14);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .code-card {
+    border-radius: 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,.32);
+  }
+
+  .code-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.03);
+  }
+
+  .code-head .dot { width: 9px; height: 9px; }
+  .code-title {
+    margin-left: 8px;
+    font-size: 11.5px;
+    color: rgba(255,255,255,.46);
+    font-family: "SFMono-Regular", Consolas, monospace;
+  }
+
+  .code-body {
+    padding: 20px 18px;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 2;
+    color: rgba(255,255,255,.82);
+    overflow-x: auto;
+  }
+
+  .code-body .cmt { color: #6b7280; }
+  .code-body .kw { color: #ff9d66; }
+  .code-body .str { color: #86d3a5; }
+
+  /* ============ 页脚 ============ */
+  .footer {
+    padding: 44px 0 52px;
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+
+  .footer-links a:hover { color: var(--brand); }
+
+  /* ============ 滚动出现动画 ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ 响应式 ============ */
+  @media (max-width: 980px) {
+    .hero { padding: 60px 0 70px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+    h1 { font-size: 38px; letter-spacing: -1px; }
+    .features { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .install-grid { grid-template-columns: 1fr; gap: 36px; }
+    .nav-links { display: none; }
+    section { padding: 68px 0; }
+    .sec-head h2 { font-size: 28px; }
+  }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 31px; }
+    .hero-desc { font-size: 15px; }
+    .features { grid-template-columns: 1fr; }
+    .hero-meta { gap: 22px; }
+    .meta-item strong { font-size: 19px; }
+    .btn-lg { width: 100%; justify-content: center; }
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <div class="logo">
+      <span class="logo-mark">IMG</span>
+      <span>电商图片提取下载助手</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">功能特性</a>
+      <a href="#steps">使用方式</a>
+      <a href="#platforms">支持平台</a>
+      <a href="#install">安装</a>
+    </div>
+    <a class="nav-cta" href="#install">
+      免费安装
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Chrome 浏览器扩展 · v1.0.0
+      </div>
+      <h1>
+        一键提取商品图<br />
+        <span class="grad">批量下载 PNG</span>
+      </h1>
+      <p class="hero-desc">
+        打开淘宝、天猫、京东、拼多多的商品详情页，点击右下角按钮，整页商品图自动汇总，勾选即可批量下载，统一保存为 PNG 格式。
+      </p>
+      <div class="hero-actions">
+        <a class="btn-lg btn-solid" href="#install">
+          获取安装方式
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12l7 7 7-7"></path>
+          </svg>
+        </a>
+        <a class="btn-lg btn-line" href="#features">查看功能</a>
+      </div>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <strong>4 大</strong>
+          <span>主流电商平台</span>
+        </div>
+        <div class="meta-item">
+          <strong>PNG</strong>
+          <span>统一输出格式</span>
+        </div>
+        <div class="meta-item">
+          <strong>0 元</strong>
+          <span>完全免费使用</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浏览器模拟 -->
+    <div class="mock">
+      <div class="mock-bar">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <div class="mock-url">item.taobao.com/item.htm?id=8876543210</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-product">
+          <div class="mock-thumb"></div>
+          <div class="mock-lines">
+            <div class="mock-line w70"></div>
+            <div class="mock-line w45"></div>
+            <div class="mock-line w60"></div>
+          </div>
+        </div>
+        <div class="mock-grid">
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+          <div class="mock-cell"></div>
+        </div>
+        <div class="mock-fab">
+          <span class="mock-fab-ico">IMG</span>
+          <span>获取图片</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 功能 -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Features</span>
+      <h2>为电商美工和运营准备的工具</h2>
+      <p>不用再一张张右键另存，整页商品图一次性拿到手。</p>
+    </div>
+
+    <div class="features">
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        </div>
+        <h3>整页图片提取</h3>
+        <p>自动识别 img 标签、懒加载属性、srcset 与背景图，主图、详情图、SKU 图都不遗漏。</p>
+      </div>
+
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg>
+        </div>
+        <h3>勾选后再下载</h3>
+        <p>提取结果在新标签页集中展示，支持全选、反选、单张勾选，只下载真正需要的那几张。</p>
+      </div>
+
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </div>
+        <h3>统一转 PNG</h3>
+        <p>无论原图是 JPG、WebP 还是 AVIF，全部通过 Canvas 重新编码为无损 PNG，命名自动编号。</p>
+      </div>
+
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+        </div>
+        <h3>批量并发处理</h3>
+        <p>带进度条与失败清单，上百张图也能稳定跑完，单张失败不影响整体任务。</p>
+      </div>
+
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l3 2"></path></svg>
+        </div>
+        <h3>大图即时预览</h3>
+        <p>双击任意缩略图即可查看原图与尺寸，确认画质后再决定是否下载。</p>
+      </div>
+
+      <div class="feat reveal">
+        <div class="feat-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+        </div>
+        <h3>本地运行不上传</h3>
+        <p>所有图片解析与转换都在浏览器本地完成，不经过任何第三方服务器。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 步骤 -->
+<section id="steps" class="steps-sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">How it works</span>
+      <h2>三步完成图片提取</h2>
+      <p>打开商品页 → 点击按钮 → 勾选下载，全程不超过半分钟。</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>打开商品详情页</h3>
+        <p>在淘宝、天猫、京东或拼多多打开任意商品的详情页，等待图片加载完成。</p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>点击「获取图片」</h3>
+        <p>页面右下角会固定显示橙色按钮，点击后自动扫描整页商品图并汇总。</p>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>勾选并下载</h3>
+        <p>在预览页勾选需要的图片，点击下载，全部保存为 PNG 并自动按序号命名。</p>
+        <code>电商图片/商品标题/001.png</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 平台 -->
+<section id="platforms">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">Supported</span>
+      <h2>支持的主流电商平台</h2>
+      <p>针对各平台详情页结构做了独立适配，后续会持续增加。</p>
+    </div>
+
+    <div class="platforms reveal">
+      <div class="plat">淘宝</div>
+      <div class="plat">天猫</div>
+      <div class="plat">京东</div>
+      <div class="plat">拼多多</div>
+      <div class="plat">1688</div>
+      <div class="plat">苏宁易购</div>
+    </div>
+  </div>
+</section>
+
+<!-- 安装 -->
+<section id="install" class="install-sec">
+  <div class="wrap install-grid">
+    <div class="reveal">
+      <h2>两分钟完成安装</h2>
+      <p class="lead">
+        插件以开发者模式本地加载，无需上架商店，也不需要注册账号。下载源码后按下面三步操作即可。
+      </p>
+      <ul class="install-list">
+        <li>
+          <span class="num">1</span>
+          <span>打开 Chrome，地址栏输入 <strong>chrome://extensions</strong> 并回车</span>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <span>打开右上角的「开发者模式」开关</span>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <span>点击「加载已解压的扩展程序」，选择项目中的 <strong>plugin</strong> 文件夹</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="code-card reveal">
+      <div class="code-head">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#febc2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span class="code-title">终端</span>
+      </div>
+      <div class="code-body">
+<span class="cmt"># 克隆项目到本地</span><br />
+<span class="kw">git</span> clone https://github.com/&lt;你的用户名&gt;/dianshang-plugin.git<br /><br />
+<span class="cmt"># 进入插件目录</span><br />
+<span class="kw">cd</span> dianshang-plugin/plugin<br /><br />
+<span class="cmt"># 在 Chrome 中加载本目录</span><br />
+<span class="str">chrome://extensions</span> → 开发者模式 → 加载已解压的扩展程序
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-left">
+      <span class="logo-mark" style="width:28px;height:28px;font-size:9px;border-radius:8px;">IMG</span>
+      <span>电商图片提取下载助手 · 仅供学习与个人使用</span>
+    </div>
+    <div class="footer-links">
+      <a href="#features">功能</a>
+      <a href="#steps">使用</a>
+      <a href="#install">安装</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 滚动进入视口时淡入
+  (function () {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    items.forEach(function (el, i) {
+      el.style.transitionDelay = (i % 6) * 60 + 'ms';
+      io.observe(el);
+    });
+  })();
+</script>
+</body>
+</html>

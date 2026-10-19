@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>图片预览 - 电商图片提取下载助手</title>
+  <link rel="stylesheet" href="gallery.css" />
+</head>
+<body>
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <span class="brand-mark">IMG</span>
+        <div class="brand-text">
+          <strong>图片提取结果</strong>
+          <span id="metaTitle" class="meta-title">正在读取…</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="stat">
+        <span class="stat-num" id="statTotal">0</span>
+        <span class="stat-label">张图片</span>
+      </div>
+      <div class="stat stat-accent">
+        <span class="stat-num" id="statSelected">0</span>
+        <span class="stat-label">已选择</span>
+      </div>
+      <button id="btnSelectAll" class="btn btn-ghost" type="button">全选</button>
+      <button id="btnInvert" class="btn btn-ghost" type="button">反选</button>
+      <button id="btnDownload" class="btn btn-primary" type="button">
+        <span class="btn-ico">↓</span>
+        <span id="btnDownloadText">下载所选</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 进度条 -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar"></div>
+    <span class="progress-text" id="progressText"></span>
+  </div>
+
+  <!-- 内容区 -->
+  <main class="main">
+    <div id="empty" class="empty" hidden>
+      <div class="empty-icon">IMG</div>
+      <h2>还没有提取到图片</h2>
+      <p>请先在淘宝 / 天猫 / 京东 / 拼多多的商品详情页，点击右下角的「获取图片」按钮。</p>
+    </div>
+
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <!-- 底部操作条（滚动时固定） -->
+  <footer class="bottombar">
+    <div class="bottombar-left">
+      <label class="check-all">
+        <input type="checkbox" id="chkAll" />
+        <span>全选</span>
+      </label>
+      <span class="hint">点击图片可放大预览，勾选后批量下载为 PNG</span>
+    </div>
+    <div class="bottombar-right">
+      <span id="statusText" class="status-text"></span>
+      <button id="btnDownload2" class="btn btn-primary" type="button">下载所选</button>
+    </div>
+  </footer>
+
+  <!-- 大图预览 -->
+  <div id="lightbox" class="lightbox" hidden>
+    <button class="lb-close" id="lbClose" type="button">×</button>
+    <img id="lbImg" src="" alt="预览" />
+    <div class="lb-info" id="lbInfo"></div>
+  </div>
+
+  <script src="gallery.js"></script>
+</body>
+</html>

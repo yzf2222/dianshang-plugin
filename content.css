@@ -1,0 +1,87 @@
+/* ===== 浮动按钮 ===== */
+#__ds_img_helper_btn__ {
+  position: fixed;
+  right: 24px;
+  bottom: 96px;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px 12px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff5000 0%, #ff7a1a 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 8px 24px rgba(255, 80, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+#__ds_img_helper_btn__:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 80, 0, 0.38), 0 3px 8px rgba(0, 0, 0, 0.14);
+}
+
+#__ds_img_helper_btn__:active {
+  transform: translateY(0);
+}
+
+#__ds_img_helper_btn__.ds-loading {
+  opacity: 0.82;
+  cursor: progress;
+}
+
+#__ds_img_helper_btn__ .ds-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+#__ds_img_helper_btn__ .ds-txt {
+  white-space: nowrap;
+}
+
+/* ===== 提示条 ===== */
+#__ds_img_helper_toast__ {
+  position: fixed;
+  right: 24px;
+  bottom: 156px;
+  z-index: 2147483647;
+  max-width: 320px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #1f2430;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+#__ds_img_helper_toast__.ds-toast-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#__ds_img_helper_toast__.ds-toast-ok {
+  background: #16a34a;
+}
+
+#__ds_img_helper_toast__.ds-toast-warn {
+  background: #d97706;
+}
