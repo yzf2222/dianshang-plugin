@@ -24,19 +24,24 @@
 
 ```
 dianshang-plugin/
-├── index.html              # 插件官网（GitHub Pages 发布入口）
-├── README.md
-├── .gitignore
-└── plugin/                 # Chrome 扩展源码（加载这个目录）
-    ├── manifest.json       # MV3 配置
-    ├── background.js       # Service Worker：接收图片列表、打开预览页
-    ├── content.js          # 内容脚本：注入右下角按钮、采集图片
-    ├── content.css         # 浮动按钮与提示条样式
-    ├── gallery.html        # 图片预览页
-    ├── gallery.js          # 预览页逻辑：勾选 / 转 PNG / 下载
-    ├── gallery.css         # 预览页样式
-    ├── popup.html          # 工具栏弹窗
-    └── popup.js            # 弹窗逻辑：检测页面、快捷提取
+├── manifest.json           # MV3 配置（扩展根目录 = 本文件夹）
+├── background.js           # Service Worker：接收图片列表、打开预览页
+├── content.js              # 内容脚本：注入右下角按钮、采集图片
+├── content.css             # 浮动按钮与提示条样式
+├── gallery.html            # 图片预览页
+├── gallery.js              # 预览页逻辑：勾选 / 转 PNG / 下载
+├── gallery.css             # 预览页样式
+├── popup.html              # 工具栏弹窗
+├── popup.js                # 弹窗逻辑：检测页面、快捷提取
+├── icons/                  # 扩展图标 16 / 32 / 48 / 128
+├── docs/
+│   ├── index.html          # 官网首页（GitHub Pages 发布 /docs）
+│   └── demo.html           # 演示用商品详情页（本地测试插件）
+├── 1-open-site.bat         # 打开官网预览
+├── 2-open-demo.bat         # 打开演示商品页
+├── 3-git-commit.bat        # 一键 git init / add / commit
+├── 4-push-github.bat       # 一键 push 到 GitHub
+└── README.md
 ```
 
 ---
@@ -46,7 +51,7 @@ dianshang-plugin/
 1. 打开 Chrome，地址栏输入 `chrome://extensions` 并回车
 2. 打开右上角 **开发者模式** 开关
 3. 点击 **加载已解压的扩展程序**
-4. 选择本项目中的 **`plugin`** 文件夹
+4. 选择 **本项目根目录** `D:\dianshang-plugin`（`manifest.json` 就在这一层）
 5. 加载成功后，工具栏会出现扩展图标
 
 ---
@@ -82,7 +87,7 @@ git push -u origin main
 
 1. 打开仓库页面 → **Settings** → 左侧 **Pages**
 2. **Source** 选择 `Deploy from a branch`
-3. **Branch** 选择 `main`，目录选 `/ (root)`
+3. **Branch** 选择 `main`，目录选 **`/docs`**
 4. 点击 **Save**，等待 1~2 分钟
 5. 访问 `https://<你的用户名>.github.io/dianshang-plugin/`
 

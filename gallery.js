@@ -365,6 +365,13 @@
 
   /* ---------- 初始化 ---------- */
   function init() {
+    // 脱离扩展环境（例如直接双击 html）时优雅降级为空状态，避免报错
+    if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
+      el.metaTitle.textContent = '未在扩展环境中运行';
+      render();
+      return;
+    }
+
     chrome.storage.local.get(['dsImages', 'dsMeta'], function (data) {
       const imgs = Array.isArray(data.dsImages) ? data.dsImages : [];
       state.meta = data.dsMeta || null;
